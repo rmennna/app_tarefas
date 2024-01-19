@@ -1,6 +1,6 @@
 # app_tarefas
 
-app de tarefas
+app de tarefas em Flutter
 
 ## Getting Started
 
