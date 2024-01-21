@@ -1,7 +1,10 @@
+import 'package:app_tarefas/data/task_inherited.dart';
 import 'package:flutter/material.dart';
 
 class FormScreen extends StatefulWidget {
-  const FormScreen({Key? key}) : super(key: key);
+  const FormScreen({Key? key, required this.taskContext}) : super(key: key);
+
+  final BuildContext taskContext;
 
   @override
   State<FormScreen> createState() => _FormScreenState();
@@ -39,9 +42,9 @@ class _FormScreenState extends State<FormScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Insira o nome da Tarefa ";
+                      validator: (String? value) {
+                        if (value != null && value.isEmpty) {
+                          return 'Insira o nome da Tarefa';
                         }
                         return null;
                       },
@@ -62,7 +65,7 @@ class _FormScreenState extends State<FormScreen> {
                         if (value!.isEmpty ||
                             int.parse(value) > 5 ||
                             int.parse(value) < 1) {
-                          return 'Insira uma Dificultade entre 1 a 5';
+                          return 'Insira um Dificuldade entre 1 e 5';
                         }
                         return null;
                       },
@@ -80,16 +83,16 @@ class _FormScreenState extends State<FormScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
+                      onChanged: (text) {
+                        setState(() {});
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
-                          return 'Ensira uma URL de Imagem';
+                          return 'Insira um URL de Imagem!';
                         }
                         return null;
                       },
                       keyboardType: TextInputType.url,
-                      onChanged: (text) {
-                        setState(() {});
-                      },
                       controller: imageController,
                       textAlign: TextAlign.center,
                       decoration: const InputDecoration(
@@ -123,9 +126,13 @@ class _FormScreenState extends State<FormScreen> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
+                        TaskInherited.of(widget.taskContext).newTask(
+                            nameController.text,
+                            imageController.text,
+                            int.parse(difficultyController.text));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content: Text('Salvando Tarefa!'),
+                            content: Text('Criando uma nova Tarefa'),
                           ),
                         );
                         Navigator.pop(context);
